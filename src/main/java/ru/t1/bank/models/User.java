@@ -15,11 +15,9 @@ public class User {
     private long id;
     private String fullName;
     private LocalDate dateOfBirth;
-    /*@ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
-    @CollectionTable(name = "users_role", joinColumns = @JoinColumn(name = "user_id"))
+    @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
-    private List<Role> roles;*/
+    private List<Role> roles;
     @OneToMany(cascade = CascadeType.ALL)
     private List<Account> accounts;
-
 }

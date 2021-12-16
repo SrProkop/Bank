@@ -16,6 +16,7 @@ public class SupportRequest {
     @ManyToOne
     private User employee;
     private String question;
+    @Enumerated(EnumType.STRING)
     private Stage stage;
     @OneToMany
     private List<MessageRequest> messages;

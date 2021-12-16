@@ -13,7 +13,8 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private LocalDateTime date;
-    //private Type type;
+    @Enumerated(EnumType.STRING)
+    private Type type;
     @ManyToOne
     private Account accountFrom;
     @ManyToOne

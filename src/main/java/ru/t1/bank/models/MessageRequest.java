@@ -13,5 +13,8 @@ public class MessageRequest {
     @ManyToOne
     private User user;
     private LocalDateTime date;
+    @ManyToOne
+    @JoinColumn(name = "request_id")
+    private SupportRequest supportRequest;
 
 }

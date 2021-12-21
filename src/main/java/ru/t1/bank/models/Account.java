@@ -13,11 +13,14 @@ public class Account {
     private long id;
     private long number;
     @ManyToOne
+    @JoinColumn(name = "client_id")
     private User client;
     @ManyToOne
     private Currency currency;
     private BigDecimal money;
-    @OneToMany
-    private List<Transaction> historyTransaction;
+    @OneToMany(mappedBy = "accountFrom")
+    List<Transaction> transactionsFrom;
+    @OneToMany(mappedBy = "accountTo")
+    List<Transaction> transactionsTo;
 
 }

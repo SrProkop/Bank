@@ -18,7 +18,7 @@ public class SupportRequest {
     private String question;
     @Enumerated(EnumType.STRING)
     private Stage stage;
-    @OneToMany
+    @OneToMany(mappedBy = "supportRequest")
     private List<MessageRequest> messages;
 
 }

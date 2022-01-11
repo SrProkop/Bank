@@ -22,4 +22,72 @@ public class Transaction {
     private BigDecimal sumFrom;
     private BigDecimal sumTo;
 
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public LocalDateTime getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDateTime date) {
+        this.date = date;
+    }
+
+    public Type getType() {
+        return type;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
+    }
+
+    public Account getAccountFrom() {
+        return accountFrom;
+    }
+
+    public void setAccountFrom(Account accountFrom) {
+        this.accountFrom = accountFrom;
+    }
+
+    public Account getAccountTo() {
+        return accountTo;
+    }
+
+    public void setAccountTo(Account accountTo) {
+        this.accountTo = accountTo;
+    }
+
+    public BigDecimal getSumFrom() {
+        return sumFrom;
+    }
+
+    public void setSumFrom(BigDecimal sumFrom) {
+        this.sumFrom = sumFrom;
+    }
+
+    public BigDecimal getSumTo() {
+        return sumTo;
+    }
+
+    public void setSumTo(BigDecimal sumTo) {
+        this.sumTo = sumTo;
+    }
+
+    @Override
+    public String toString() {
+        return "Transaction{" +
+                "id=" + id +
+                ", date=" + date +
+                ", type=" + type +
+                ", accountFrom=" + accountFrom +
+                ", accountTo=" + accountTo +
+                ", sumFrom=" + sumFrom +
+                ", sumTo=" + sumTo +
+                '}';
+    }
 }

@@ -4,22 +4,23 @@ import ru.t1.bank.enums.Role;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long id;
     private String fullName;
     private LocalDate dateOfBirth;
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
-    private List<Role> roles;
-    @OneToMany(mappedBy = "client")
-    private List<Account> accounts;
+    private Set<Role> roles;
+    @OneToMany(mappedBy = "client", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private Set<Account> accounts;
 
     public long getId() {
         return id;
@@ -45,19 +46,28 @@ public class User {
         this.dateOfBirth = dateOfBirth;
     }
 
-    public List<Role> getRoles() {
+    public Set<Role> getRoles() {
+        if (this.roles == null) {
+            this.roles = new HashSet<>();
+        }
         return roles;
     }
 
-    public void setRoles(List<Role> roles) {
-        this.roles = roles;
-    }
-
-    public List<Account> getAccounts() {
+    public Set<Account> getAccounts() {
+        if (this.accounts == null) {
+            this.accounts = new HashSet<>();
+        }
         return accounts;
     }
 
-    public void setAccounts(List<Account> accounts) {
-        this.accounts = accounts;
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", fullName='" + fullName + '\'' +
+                ", dateOfBirth=" + dateOfBirth +
+                ", roles=" + roles +
+                ", accounts=" + accounts +
+                '}';
     }
 }

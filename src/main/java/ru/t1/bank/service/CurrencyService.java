@@ -24,4 +24,8 @@ public class CurrencyService {
     public List<Currency> findAll() {
         return currencyRepository.findAll();
     }
+
+    public Currency findById(Long id) {
+        return currencyRepository.findById(id).orElse(null);
+    }
 }

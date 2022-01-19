@@ -8,8 +8,9 @@ public class Currency {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @Column(unique = true, length = 3)
+    @Column(unique = true, length = 3, nullable = false)
     private String code;
+    @Column(nullable = false)
     private String name;
 
     public long getId() {

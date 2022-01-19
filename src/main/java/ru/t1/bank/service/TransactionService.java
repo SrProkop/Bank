@@ -2,6 +2,7 @@ package ru.t1.bank.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.t1.bank.enums.Type;
 import ru.t1.bank.models.Transaction;
 import ru.t1.bank.models.User;
 import ru.t1.bank.repository.TransactionRepository;
@@ -43,6 +44,10 @@ public class TransactionService {
 
     public List<Transaction> findTransactionByDateBefore(LocalDateTime dateTime) {
         return transactionRepository.findByDateBefore(dateTime);
+    }
+
+    public List<Transaction> findByType(Type type) {
+        return transactionRepository.findByType(type);
     }
 
 }

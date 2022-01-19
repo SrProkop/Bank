@@ -49,7 +49,6 @@ public class Account {
 
     public void setClient(User client) {
         this.client = client;
-        client.getAccounts().add(this);
     }
 
     public Currency getCurrency() {

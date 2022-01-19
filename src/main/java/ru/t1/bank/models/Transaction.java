@@ -14,6 +14,7 @@ public class Transaction {
     private long id;
     private LocalDateTime date;
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Type type;
     @ManyToOne
     private Account accountFrom;

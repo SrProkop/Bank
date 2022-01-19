@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.event.EventListener;
 import ru.t1.bank.enums.Role;
 import ru.t1.bank.enums.Type;
@@ -77,9 +78,10 @@ public class BankApplication {
 		transaction.setSumTo(new BigDecimal(2000000));
 		account.getTransactionsTo().add(transaction);
 		accountService.saveAll(accounts);*/
-		System.out.println(transactionService.findTransactionWhereSumWhere(100000l).get(0).getAccountTo().getId());
+		/*System.out.println(transactionService.findTransactionWhereSumWhere(100000l).get(0).getAccountTo().getId());
 		System.out.println(transactionService.findAll().size());
 		System.out.println(transactionService.findTransactionByDateBefore(LocalDateTime.of(2020, 3, 10, 20, 21)).size());
+		System.out.println(transactionService.findByType(Type.Transfer).size());*/
 	}
 
 

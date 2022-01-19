@@ -3,6 +3,7 @@ package ru.t1.bank.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import ru.t1.bank.enums.Type;
 import ru.t1.bank.models.Transaction;
 
 import java.math.BigDecimal;
@@ -15,5 +16,7 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
     List<Transaction> findTransactionWhereSumMore(@Param("sum") BigDecimal sum);
 
     List<Transaction> findByDateBefore(LocalDateTime date);
+
+    List<Transaction> findByType(Type type);
 
 }

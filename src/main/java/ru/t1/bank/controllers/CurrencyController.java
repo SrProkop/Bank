@@ -2,41 +2,42 @@ package ru.t1.bank.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import ru.t1.bank.Response;
+import ru.t1.bank.exceptions.NotFoundException;
 import ru.t1.bank.models.Currency;
 import ru.t1.bank.service.CurrencyService;
 
 import java.util.List;
 
 @RestController
+@RequestMapping("/currency")
 public class CurrencyController {
 
-    @Autowired
-    CurrencyService currencyService;
+    private final CurrencyService currencyService;
 
-    @GetMapping("currencies")
+    public CurrencyController(CurrencyService currencyService) {
+        this.currencyService = currencyService;
+    }
+
+    @GetMapping("/all")
     public List<Currency> currencies() {
         return currencyService.findAll();
     }
 
-    @PostMapping("/currencies/{id}")
-    public Currency findCurrencyById(@PathVariable long id) {
+    @PostMapping("/{id}")
+    public Currency findCurrencyById(@PathVariable long id) throws NotFoundException {
         return currencyService.findById(id);
     }
 
-    @PostMapping("/currencies/create")
-    public String createCurrency(@RequestParam String name,
+    @PostMapping("/create")
+    public Currency createCurrency(@RequestParam String name,
                                  @RequestParam String code) {
-        currencyService.createCurrency(name, code);
-        return "currency created";
+        return currencyService.createCurrency(name, code);
     }
 
-    @PostMapping("/currencies/delete/{id}")
-    public String deleteCurrency(@PathVariable long id) {
-        if (currencyService.currencyIsPresent(id)) {
-            currencyService.deleteById(id);
-            return "account deleted";
-        } else {
-            return "account not found";
-        }
+    @DeleteMapping("/delete/{id}")
+    public Response deleteCurrency(@PathVariable long id) throws NotFoundException {
+        currencyService.deleteById(id);
+        return new Response("Currency deleted");
     }
 }

@@ -1,9 +1,8 @@
 package ru.t1.bank.models;
 
-import ru.t1.bank.enums.Stage;
+import ru.t1.bank.enums.Status;
 
 import javax.persistence.*;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -17,8 +16,7 @@ public class SupportRequest {
     @ManyToOne
     private User employee;
     private String question;
-    @Enumerated(EnumType.STRING)
-    private Stage stage;
+    private boolean isOpen;
     @OneToMany(mappedBy = "supportRequest", fetch = FetchType.EAGER)
     private Set<MessageRequest> messages;
 
@@ -54,12 +52,12 @@ public class SupportRequest {
         this.question = question;
     }
 
-    public Stage getStage() {
-        return stage;
+    public boolean isOpen() {
+        return isOpen;
     }
 
-    public void setStage(Stage stage) {
-        this.stage = stage;
+    public void setOpen(boolean open) {
+        isOpen = open;
     }
 
     public Set<MessageRequest> getMessages() {
@@ -77,7 +75,7 @@ public class SupportRequest {
                 ", client=" + client +
                 ", employee=" + employee +
                 ", question='" + question + '\'' +
-                ", stage=" + stage +
+                ", isOpen=" + isOpen +
                 ", messages=" + messages +
                 '}';
     }

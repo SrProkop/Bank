@@ -1,20 +1,21 @@
 package ru.t1.bank.utils;
 
+import ru.t1.bank.exceptions.IncorrectDataException;
+
 import java.time.LocalDate;
-import java.util.Optional;
 
 public class DateConverter {
 
-    public static Optional<LocalDate> converterLocalDate(String date) {
+    public static LocalDate converterLocalDate(String date) throws IncorrectDataException {
         try {
-            String splitDate[] = date.split("-");
-            LocalDate localDate = LocalDate.of(
-                    Integer.parseInt(splitDate[3]),
+            String[] splitDate = date.split("-");
+            return LocalDate.of(
+                    Integer.parseInt(splitDate[2]),
                     Integer.parseInt(splitDate[1]),
                     Integer.parseInt(splitDate[0]));
-            return Optional.of(localDate);
         } catch (Exception e) {
-            return Optional.empty();
+            throw new IncorrectDataException("You input incorrect date. " +
+                    "Format date: DD-MM-YYYY");
         }
     }
 

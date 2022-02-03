@@ -2,6 +2,9 @@ package ru.t1.bank.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import ru.t1.bank.Response;
+import ru.t1.bank.exceptions.InsufficientFundsException;
+import ru.t1.bank.exceptions.NotFoundException;
 import ru.t1.bank.models.Account;
 import ru.t1.bank.models.Transaction;
 import ru.t1.bank.service.AccountService;
@@ -11,48 +14,43 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
+@RequestMapping("/transaction")
 public class TransactionController {
 
-    @Autowired
-    TransactionService transactionService;
-    @Autowired
-    AccountService accountService;
+    private TransactionService transactionService;
+    private AccountService accountService;
 
-    @GetMapping("/transactions")
+    public TransactionController(TransactionService transactionService, AccountService accountService) {
+        this.transactionService = transactionService;
+        this.accountService = accountService;
+    }
+
+    @GetMapping("/all")
     public List<Transaction> allTransaction() {
         return transactionService.findAll();
     }
 
-    @PostMapping("/transaction/{id}")
-    public Transaction findTransactionById(@PathVariable long id) {
+    @PostMapping("/{id}")
+    public Transaction findTransactionById(@PathVariable long id) throws NotFoundException {
         return transactionService.findById(id);
     }
 
-    @PostMapping("/transaction/deposit")
-    public String deposit(@RequestParam long userId,
-                          @RequestParam long sum) {
-        if (!accountService.accountIsPresent(userId)) {
-            return "account not found";
-        }
-        Account account = accountService.findById(userId);
+    @PostMapping("/deposit")
+    public Response deposit(@RequestParam long accountId,
+                            @RequestParam long sum) throws NotFoundException {
+        Account account = accountService.findById(accountId);
         transactionService.deposit(account, sum);
         accountService.createAccount(account);
-        return "transaction created";
+        return new Response("Deposit passed");
     }
 
-    @PostMapping("/transaction/withdraw")
-    public String withdraw(@RequestParam long userId,
-                          @RequestParam long sum) {
-        if (!accountService.accountIsPresent(userId)) {
-            return "account not found";
-        }
-        Account account = accountService.findById(userId);
-        if (transactionService.withdraw(account, sum) != null) {
-            accountService.createAccount(account);
-            return "transaction created";
-        }
-        return "transaction not created";
+    @PostMapping("/withdraw")
+    public Response withdraw(@RequestParam long accountId,
+                          @RequestParam long sum) throws NotFoundException, InsufficientFundsException {
+        Account account = accountService.findById(accountId);
+        transactionService.withdraw(account, sum);
+        accountService.createAccount(account);
+        return new Response("Withdraw passed");
     }
-
 
 }

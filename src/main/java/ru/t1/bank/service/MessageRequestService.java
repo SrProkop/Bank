@@ -5,14 +5,12 @@ import org.springframework.stereotype.Service;
 import ru.t1.bank.models.MessageRequest;
 import ru.t1.bank.models.SupportRequest;
 import ru.t1.bank.repository.MessageRequestRepository;
-import ru.t1.bank.repository.SupportRequestRepository;
 
 import java.util.List;
 
 @Service
 public class MessageRequestService {
 
-    @Autowired
     MessageRequestRepository messageRequestRepository;
 
     public MessageRequestService(MessageRequestRepository messageRequestRepository) {

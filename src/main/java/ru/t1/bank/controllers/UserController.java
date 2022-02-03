@@ -1,47 +1,44 @@
 package ru.t1.bank.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.t1.bank.enums.Role;
+import ru.t1.bank.exceptions.IncorrectDataException;
+import ru.t1.bank.exceptions.NotFoundException;
 import ru.t1.bank.models.User;
 import ru.t1.bank.service.UserService;
-import ru.t1.bank.utils.DateConverter;
+import ru.t1.bank.Response;
 
 import java.util.List;
 
 @RestController
+@RequestMapping("/profile")
 public class UserController {
 
-    @Autowired
-    UserService userService;
+    private final UserService userService;
 
-    @GetMapping("/profiles")
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
+
+    @GetMapping("/all")
     public List<User> allUsers() {
         return userService.findAll();
     }
 
-    @GetMapping("/profiles/{id}")
-    public User findUserById(@PathVariable long id) {
+    @GetMapping("/{id}")
+    public User findUserById(@PathVariable long id) throws NotFoundException {
         return userService.findById(id);
     }
 
-    @PostMapping("/profiles/create")
-    public String createUser(@RequestParam String name,
-                             @RequestParam String dateOfBirth) {
-        if (userService.createUser(name, dateOfBirth) != null) {
-            return "user created";
-        }
-        return "user not created";
+    @PostMapping("/create")
+    public User createUser(@RequestParam String name,
+                             @RequestParam String dateOfBirth) throws IncorrectDataException {
+        return userService.createUser(name, dateOfBirth);
     }
 
-    @PostMapping("/profiles/delete/{id}")
-    public String deleteUser(@PathVariable long id) {
-        if (userService.userIsPresent(id)) {
-            userService.deleteById(id);
-            return "user delete";
-        } else {
-            return "user not found";
-        }
+    @DeleteMapping("/delete/{id}")
+    public Response deleteUser(@PathVariable long id) throws NotFoundException {
+        userService.deleteById(id);
+        return new Response("User deleted");
     }
 
 }

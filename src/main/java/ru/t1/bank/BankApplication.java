@@ -8,6 +8,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.event.EventListener;
 import ru.t1.bank.enums.Role;
 import ru.t1.bank.enums.Type;
+import ru.t1.bank.exceptions.NotFoundException;
 import ru.t1.bank.models.Account;
 import ru.t1.bank.models.Currency;
 import ru.t1.bank.models.Transaction;
@@ -85,7 +86,7 @@ public class BankApplication {
 	}
 
 
-	private void createUsersAndAccounts() {
+	private void createUsersAndAccounts() throws NotFoundException {
 		List<User> users = new ArrayList<>();
 		Currency currency = new Currency();
 		currency.setName("Рубль");

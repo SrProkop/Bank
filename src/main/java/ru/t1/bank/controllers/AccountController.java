@@ -1,56 +1,54 @@
 package ru.t1.bank.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.t1.bank.enums.Role;
+import ru.t1.bank.Response;
+import ru.t1.bank.exceptions.NotFoundException;
 import ru.t1.bank.models.Account;
 import ru.t1.bank.models.Currency;
 import ru.t1.bank.models.User;
 import ru.t1.bank.service.AccountService;
 import ru.t1.bank.service.CurrencyService;
 import ru.t1.bank.service.UserService;
-import ru.t1.bank.utils.DateConverter;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
+@RequestMapping("/account")
 public class AccountController {
 
-    @Autowired
-    AccountService accountService;
-    @Autowired
-    UserService userService;
-    @Autowired
-    CurrencyService currencyService;
+    private final AccountService accountService;
+    private final UserService userService;
+    private final CurrencyService currencyService;
 
-    @GetMapping("/accounts")
+    public AccountController(AccountService accountService,
+                             UserService userService,
+                             CurrencyService currencyService) {
+        this.accountService = accountService;
+        this.userService = userService;
+        this.currencyService = currencyService;
+    }
+
+    @GetMapping("/all")
     public List<Account> allAccount() {
         return accountService.findAll();
     }
 
-    @GetMapping("/accounts/{id}")
-    public Account findAccountById(@PathVariable long id) {
+    @GetMapping("/{id}")
+    public Account findAccountById(@PathVariable long id) throws NotFoundException {
         return accountService.findById(id);
     }
 
-    @PostMapping("/accounts/create")
-    public String createAccountForUser(@RequestParam long userId,
-                             @RequestParam String currencyCode) {
+    @PostMapping("/create")
+    public Account createAccountForUser(@RequestParam long userId,
+                             @RequestParam String currencyCode) throws NotFoundException {
         User user = userService.findById(userId);
         Currency currency = currencyService.findByCode(currencyCode);
-        accountService.createAccount(user, currency);
-        return "account created";
+        return accountService.createAccount(user, currency);
     }
 
-    @PostMapping("/accounts/delete/{id}")
-    public String deleteAccount(@PathVariable long id) {
-        if (accountService.accountIsPresent(id)) {
-            accountService.deleteById(id);
-            return "account delete";
-        } else {
-            return "account not found";
-        }
+    @PostMapping("/delete/{id}")
+    public Response closeAccount(@PathVariable long id) throws NotFoundException {
+        accountService.deleteById(id);
+        return new Response("Account deleted");
     }
-
 }

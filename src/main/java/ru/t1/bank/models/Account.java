@@ -1,15 +1,23 @@
 package ru.t1.bank.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import org.springframework.transaction.annotation.Transactional;
+import ru.t1.bank.enums.Status;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "accounts")
+@Where(clause = "is_open = true")
 public class Account {
 
     @Id
@@ -18,14 +26,21 @@ public class Account {
     private String number;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "client_id")
+    @JsonBackReference
     private User client;
     @ManyToOne(fetch = FetchType.LAZY)
     private Currency currency;
+    private boolean isOpen;
     private BigDecimal money;
-    @OneToMany(mappedBy = "accountFrom", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private LocalDate dateOpen;
+    private LocalDate dateClose;
+    @OneToMany(mappedBy = "accountFrom", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     Set<Transaction> transactionsFrom;
-    @OneToMany(mappedBy = "accountTo", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "accountTo", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     Set<Transaction> transactionsTo;
+
+    public Account() {
+    }
 
     public long getId() {
         return id;
@@ -65,6 +80,30 @@ public class Account {
 
     public void setMoney(BigDecimal money) {
         this.money = money;
+    }
+
+    public boolean isOpen() {
+        return isOpen;
+    }
+
+    public void setOpen(boolean open) {
+        isOpen = open;
+    }
+
+    public LocalDate getDateOpen() {
+        return dateOpen;
+    }
+
+    public void setDateOpen(LocalDate dateOpen) {
+        this.dateOpen = dateOpen;
+    }
+
+    public LocalDate getDateClose() {
+        return dateClose;
+    }
+
+    public void setDateClose(LocalDate dateClose) {
+        this.dateClose = dateClose;
     }
 
     public Set<Transaction> getTransactionsFrom() {

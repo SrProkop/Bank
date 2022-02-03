@@ -1,6 +1,6 @@
 package ru.t1.bank.enums;
 
-public enum Stage {
+public enum Status {
     Open,
     Close
 }

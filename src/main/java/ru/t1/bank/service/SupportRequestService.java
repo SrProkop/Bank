@@ -12,7 +12,6 @@ import java.util.List;
 @Service
 public class SupportRequestService {
 
-    @Autowired
     SupportRequestRepository supportRequestRepository;
 
     public SupportRequestService(SupportRequestRepository supportRequestRepository) {

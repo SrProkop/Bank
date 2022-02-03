@@ -1,5 +1,9 @@
 package ru.t1.bank.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import ru.t1.bank.enums.Role;
 
 import javax.persistence.*;
@@ -20,6 +24,7 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Set<Role> roles;
     @OneToMany(mappedBy = "client", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JsonManagedReference
     private Set<Account> accounts;
 
     public long getId() {

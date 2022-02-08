@@ -1,5 +1,6 @@
 package ru.t1.bank.controllers;
 
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import ru.t1.bank.Response;
 import ru.t1.bank.exceptions.NotFoundException;
@@ -10,7 +11,7 @@ import ru.t1.bank.service.AccountService;
 import ru.t1.bank.service.CurrencyService;
 import ru.t1.bank.service.UserService;
 
-import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/account")
@@ -28,27 +29,16 @@ public class AccountController {
         this.currencyService = currencyService;
     }
 
-    @GetMapping("/all")
-    public List<Account> allAccount() {
-        return accountService.findAll();
-    }
-
-    @GetMapping("/{id}")
-    public Account findAccountById(@PathVariable long id) throws NotFoundException {
-        return accountService.findById(id);
+    @GetMapping
+    public Set<Account> myAccount(@AuthenticationPrincipal User user) {
+        return user.getAccounts();
     }
 
     @PostMapping("/create")
-    public Account createAccountForUser(@RequestParam long userId,
+    public Account createAccountForUser(@AuthenticationPrincipal User user,
                              @RequestParam String currencyCode) throws NotFoundException {
-        User user = userService.findById(userId);
         Currency currency = currencyService.findByCode(currencyCode);
         return accountService.createAccount(user, currency);
     }
 
-    @PostMapping("/delete/{id}")
-    public Response closeAccount(@PathVariable long id) throws NotFoundException {
-        accountService.deleteById(id);
-        return new Response("Account deleted");
-    }
 }

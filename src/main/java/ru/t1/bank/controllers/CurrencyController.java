@@ -10,7 +10,7 @@ import ru.t1.bank.service.CurrencyService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/currency")
+@RequestMapping("/admin/currency")
 public class CurrencyController {
 
     private final CurrencyService currencyService;

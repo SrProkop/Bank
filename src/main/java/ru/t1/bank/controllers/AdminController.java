@@ -33,7 +33,7 @@ public class AdminController {
         this.transactionService = transactionService;
     }
 
-    @GetMapping("/user/all")
+    @GetMapping("/user")
     public List<User> allUsers() {
         return userService.findAll();
     }
@@ -43,13 +43,13 @@ public class AdminController {
         return userService.findById(id);
     }
 
-    @DeleteMapping("/user/{id}/delete")
+    @DeleteMapping("/user/{id}")
     public Response deleteUser(@PathVariable long id) throws NotFoundException {
         userService.deleteById(id);
         return new Response("User deleted");
     }
 
-    @GetMapping("/account/all")
+    @GetMapping("/account")
     public List<Account> allAccount() {
         return accountService.findAll();
     }
@@ -59,9 +59,25 @@ public class AdminController {
         return accountService.findById(id);
     }
 
-    @PostMapping("account/{id}/delete")
+    @DeleteMapping("account/{id}")
     public Response closeAccount(@PathVariable long id) throws NotFoundException {
         accountService.deleteById(id);
+        return new Response("Account deleted");
+    }
+
+    @GetMapping("/transaction")
+    public List<Transaction> allTransaction() {
+        return transactionService.findAll();
+    }
+
+    @GetMapping("/transaction/{id}")
+    public Transaction findTransactionById(@PathVariable long id) throws NotFoundException {
+        return transactionService.findById(id);
+    }
+
+    @DeleteMapping("/transaction/{id}")
+    public Response deleteTransaction(@PathVariable Long id) throws NotFoundException {
+        transactionService.deleteById(id);
         return new Response("Account deleted");
     }
 
@@ -83,13 +99,4 @@ public class AdminController {
         return new Response("Withdraw passed");
     }
 
-    @GetMapping("/transaction/all")
-    public List<Transaction> allTransaction() {
-        return transactionService.findAll();
-    }
-
-    @PostMapping("/transaction/{id}")
-    public Transaction findTransactionById(@PathVariable long id) throws NotFoundException {
-        return transactionService.findById(id);
-    }
 }

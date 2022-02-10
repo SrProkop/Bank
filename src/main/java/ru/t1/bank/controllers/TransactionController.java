@@ -5,7 +5,7 @@ import ru.t1.bank.service.AccountService;
 import ru.t1.bank.service.TransactionService;
 
 @RestController
-@RequestMapping("/transaction")
+@RequestMapping("/account/transaction")
 public class TransactionController {
 
     private TransactionService transactionService;

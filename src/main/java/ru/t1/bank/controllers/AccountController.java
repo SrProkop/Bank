@@ -2,7 +2,6 @@ package ru.t1.bank.controllers;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import ru.t1.bank.Response;
 import ru.t1.bank.exceptions.NotFoundException;
 import ru.t1.bank.models.Account;
 import ru.t1.bank.models.Currency;
@@ -31,10 +30,10 @@ public class AccountController {
 
     @GetMapping
     public Set<Account> myAccount(@AuthenticationPrincipal User user) {
-        return user.getAccounts();
+        return accountService.findByUserId(user.getId());
     }
 
-    @PostMapping("/create")
+    @PostMapping
     public Account createAccountForUser(@AuthenticationPrincipal User user,
                              @RequestParam String currencyCode) throws NotFoundException {
         Currency currency = currencyService.findByCode(currencyCode);

@@ -2,6 +2,7 @@ package ru.t1.bank.controllers;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import ru.t1.bank.exceptions.NotFoundException;
 import ru.t1.bank.models.User;
 import ru.t1.bank.service.UserService;
 
@@ -16,7 +17,7 @@ public class UserController {
     }
 
     @GetMapping
-    public User profile(@AuthenticationPrincipal User user) {
-        return user;
+    public User profile(@AuthenticationPrincipal User user) throws NotFoundException {
+        return userService.findById(user.getId());
     }
 }

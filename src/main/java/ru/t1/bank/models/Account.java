@@ -1,13 +1,12 @@
 package ru.t1.bank.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
-import org.springframework.transaction.annotation.Transactional;
-import ru.t1.bank.enums.Status;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -17,6 +16,8 @@ import java.util.Set;
 
 @Entity
 @Table(name = "accounts")
+@EntityListeners(AuditingEntityListener.class)
+@SQLDelete(sql = "UPDATE accounts SET is_open = false WHERE id = ?")
 @Where(clause = "is_open = true")
 public class Account {
 
@@ -32,8 +33,10 @@ public class Account {
     private Currency currency;
     private boolean isOpen;
     private BigDecimal money;
+    @CreatedDate
     private LocalDate dateOpen;
-    private LocalDate dateClose;
+    @LastModifiedDate
+    private LocalDate lastModifiedDate;
     @OneToMany(mappedBy = "accountFrom", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     Set<Transaction> transactionsFrom;
     @OneToMany(mappedBy = "accountTo", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -98,12 +101,12 @@ public class Account {
         this.dateOpen = dateOpen;
     }
 
-    public LocalDate getDateClose() {
-        return dateClose;
+    public LocalDate getLastModifiedDate() {
+        return lastModifiedDate;
     }
 
-    public void setDateClose(LocalDate dateClose) {
-        this.dateClose = dateClose;
+    public void setLastModifiedDate(LocalDate lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
     }
 
     public Set<Transaction> getTransactionsFrom() {

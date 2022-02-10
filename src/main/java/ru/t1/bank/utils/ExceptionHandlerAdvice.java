@@ -4,12 +4,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestController;
 import ru.t1.bank.exceptions.IncorrectDataException;
 import ru.t1.bank.exceptions.InsufficientFundsException;
 import ru.t1.bank.exceptions.NotFoundException;
 import ru.t1.bank.Response;
 
-@ControllerAdvice
+@ControllerAdvice(annotations = RestController.class)
 public class ExceptionHandlerAdvice {
 
     @ExceptionHandler(NotFoundException.class)

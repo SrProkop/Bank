@@ -19,23 +19,23 @@ public class CurrencyController {
         this.currencyService = currencyService;
     }
 
-    @GetMapping("/all")
+    @GetMapping
     public List<Currency> currencies() {
         return currencyService.findAll();
     }
 
-    @PostMapping("/{id}")
+    @GetMapping("/{id}")
     public Currency findCurrencyById(@PathVariable long id) throws NotFoundException {
         return currencyService.findById(id);
     }
 
-    @PostMapping("/create")
+    @PostMapping
     public Currency createCurrency(@RequestParam String name,
                                  @RequestParam String code) {
         return currencyService.createCurrency(name, code);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public Response deleteCurrency(@PathVariable long id) throws NotFoundException {
         currencyService.deleteById(id);
         return new Response("Currency deleted");

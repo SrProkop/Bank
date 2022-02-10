@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class AccountService {
@@ -36,6 +37,10 @@ public class AccountService {
         return account.get();
     }
 
+    public Set<Account> findByUserId(Long id) {
+        return accountRepository.findAllByClientId(id);
+    }
+
     public Account createAccount(Account account) {
         return accountRepository.save(account);
     }
@@ -46,7 +51,6 @@ public class AccountService {
         account.setClient(user);
         account.setCurrency(currency);
         account.setOpen(true);
-        account.setDateOpen(LocalDate.now());
         //Придумать способ генерации номера счёт получше
         account.setNumber(String.valueOf(1000_000_000_000l + findAll().size()));
         return accountRepository.save(account);
@@ -57,9 +61,7 @@ public class AccountService {
         if (account.isEmpty()) {
             throw new NotFoundException("Account not found");
         }
-        account.get().setOpen(false);
-        account.get().setDateClose(LocalDate.now());
-        accountRepository.save(account.get());
+        accountRepository.deleteById(id);
     }
 
     public boolean accountIsPresent(long id) {

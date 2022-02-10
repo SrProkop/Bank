@@ -41,7 +41,11 @@ public class TransactionService {
         transactionRepository.save(transaction);
     }
 
-    public void deleteById(Long id) {
+    public void deleteById(Long id) throws NotFoundException {
+        Optional<Transaction> transaction = transactionRepository.findById(id);
+        if (transaction.isEmpty()) {
+            throw new NotFoundException("Transaction not found");
+        }
         transactionRepository.deleteById(id);
     }
 

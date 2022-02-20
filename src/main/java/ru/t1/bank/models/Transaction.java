@@ -1,5 +1,8 @@
 package ru.t1.bank.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import ru.t1.bank.enums.Type;
 
 import javax.persistence.*;
@@ -7,11 +10,13 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 public class Transaction {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    @CreatedDate
     private LocalDateTime date;
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

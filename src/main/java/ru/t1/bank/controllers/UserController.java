@@ -17,7 +17,7 @@ public class UserController {
     }
 
     @GetMapping
-    public User profile(@AuthenticationPrincipal User user) throws NotFoundException {
+    public User getUser(@AuthenticationPrincipal User user) throws NotFoundException {
         return userService.findById(user.getId());
     }
 }

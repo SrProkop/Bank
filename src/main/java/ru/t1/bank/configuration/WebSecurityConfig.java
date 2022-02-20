@@ -8,7 +8,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import ru.t1.bank.models.Role;
 import ru.t1.bank.service.UserService;
 
 @Configuration
@@ -31,14 +30,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf()
                 .disable()
                 .authorizeRequests()
-                //Доступ только для не зарегистрированных пользователей
                 .antMatchers("/registration").not().fullyAuthenticated()
-                //Доступ только для пользователей с ролью Администратор
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .antMatchers("/profile/**").hasRole("CLIENT")
                 .antMatchers("/account/**").hasRole("CLIENT")
                 .antMatchers("/transaction/**").hasRole("CLIENT")
-                //Все остальные страницы требуют аутентификации
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()

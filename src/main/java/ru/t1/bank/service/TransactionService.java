@@ -1,6 +1,10 @@
 package ru.t1.bank.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.t1.bank.enums.Type;
 import ru.t1.bank.exceptions.InsufficientFundsException;
@@ -8,6 +12,7 @@ import ru.t1.bank.exceptions.NotFoundException;
 import ru.t1.bank.models.Account;
 import ru.t1.bank.models.Transaction;
 import ru.t1.bank.models.User;
+import ru.t1.bank.repository.AccountRepository;
 import ru.t1.bank.repository.TransactionRepository;
 import ru.t1.bank.repository.UserRepository;
 
@@ -20,13 +25,17 @@ import java.util.Optional;
 public class TransactionService {
 
     TransactionRepository transactionRepository;
+    AccountRepository accountRepository;
 
-    public TransactionService(TransactionRepository transactionRepository) {
+    public TransactionService(TransactionRepository transactionRepository,
+                              AccountRepository accountRepository) {
         this.transactionRepository = transactionRepository;
+        this.accountRepository = accountRepository;
     }
 
-    public List<Transaction> findAll() {
-        return transactionRepository.findAll();
+    public Page<Transaction> findAll(int numberPage) {
+        Pageable pageable = PageRequest.of(numberPage - 1, 20, Sort.by("id").descending());
+        return transactionRepository.findAll(pageable);
     }
 
     public Transaction findById(Long id) throws NotFoundException {
@@ -49,16 +58,9 @@ public class TransactionService {
         transactionRepository.deleteById(id);
     }
 
-    public List<Transaction> findTransactionWhereSumWhere(Long sum) {
-        return transactionRepository.findTransactionWhereSumMore(new BigDecimal(sum));
-    }
-
-    public List<Transaction> findTransactionByDateBefore(LocalDateTime dateTime) {
-        return transactionRepository.findByDateBefore(dateTime);
-    }
-
-    public List<Transaction> findByType(Type type) {
-        return transactionRepository.findByType(type);
+    public List<Transaction> findTransactionForAccount(Account account, int numberPage) {
+        Pageable pageable = PageRequest.of(numberPage - 1, 10, Sort.by("id").descending());
+        return transactionRepository.findAllByAccountFromOrAccountTo(account, account, pageable);
     }
 
     public void deposit(Account account, long sum) {
@@ -85,6 +87,25 @@ public class TransactionService {
         transactionRepository.save(transaction);
         account.getTransactionsFrom().add(transaction);
         return transaction;
+    }
+
+    public Transaction transfer(Account accountTo,
+                                Account accountFrom,
+                                BigDecimal sum) throws InsufficientFundsException {
+        if (sum.compareTo(accountFrom.getMoney()) > 0) {
+            throw new InsufficientFundsException("Insufficient fund on account");
+        }
+        Transaction transaction = new Transaction();
+        transaction.setAccountTo(accountTo);
+        transaction.setAccountFrom(accountFrom);
+        transaction.setType(Type.Transfer);
+        transaction.setSumTo(sum);
+        transaction.setSumFrom(sum);
+        accountFrom.setMoney(accountFrom.getMoney().subtract(sum));
+        accountTo.setMoney(accountTo.getMoney().add(sum));
+        accountRepository.save(accountTo);
+        accountRepository.save(accountFrom);
+        return transactionRepository.save(transaction);
     }
 
 }

@@ -1,6 +1,5 @@
 package ru.t1.bank.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.t1.bank.Response;
 import ru.t1.bank.exceptions.NotFoundException;
@@ -20,12 +19,12 @@ public class CurrencyController {
     }
 
     @GetMapping
-    public List<Currency> currencies() {
+    public List<Currency> getCurrencies() {
         return currencyService.findAll();
     }
 
     @GetMapping("/{id}")
-    public Currency findCurrencyById(@PathVariable long id) throws NotFoundException {
+    public Currency getCurrencyById(@PathVariable long id) throws NotFoundException {
         return currencyService.findById(id);
     }
 
@@ -33,6 +32,11 @@ public class CurrencyController {
     public Currency createCurrency(@RequestParam String name,
                                  @RequestParam String code) {
         return currencyService.createCurrency(name, code);
+    }
+
+    @PutMapping
+    public Currency createCurrency(@RequestBody Currency currency) {
+        return currencyService.createCurrency(currency);
     }
 
     @DeleteMapping("/{id}")

@@ -21,7 +21,7 @@ public class RegistrationController {
     }
 
     @PostMapping("/registration")
-    public User addUser(@RequestParam String fullName,
+    public User createUser(@RequestParam String fullName,
                         @RequestParam String dateOfBirth,
                         @RequestParam String username,
                         @RequestParam String password) throws IncorrectDataException {

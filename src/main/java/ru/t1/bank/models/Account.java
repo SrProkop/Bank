@@ -2,16 +2,16 @@ package ru.t1.bank.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import javax.persistence.*;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Min;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -35,11 +35,14 @@ public class Account {
     @ManyToOne(fetch = FetchType.LAZY)
     private Currency currency;
     private boolean isOpen;
+    @Min(0)
     private BigDecimal money;
     @CreatedDate
     private LocalDate dateOpen;
     @LastModifiedDate
     private LocalDate lastModifiedDate;
+    @LastModifiedBy
+    private Long lastModifiedBy;
     @JsonIgnore
     @OneToMany(mappedBy = "accountFrom", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     Set<Transaction> transactionsFrom;
@@ -112,6 +115,14 @@ public class Account {
 
     public void setLastModifiedDate(LocalDate lastModifiedDate) {
         this.lastModifiedDate = lastModifiedDate;
+    }
+
+    public Long getLastModifiedBy() {
+        return lastModifiedBy;
+    }
+
+    public void setLastModifiedBy(Long lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
     }
 
     public Set<Transaction> getTransactionsFrom() {

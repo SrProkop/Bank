@@ -2,17 +2,24 @@ package ru.t1.bank;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.event.EventListener;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import ru.t1.bank.exceptions.IncorrectDataException;
 
+import ru.t1.bank.exceptions.NotFoundException;
+import ru.t1.bank.models.Currency;
 import ru.t1.bank.models.Role;
 import ru.t1.bank.models.User;
+import ru.t1.bank.repository.AccountRepository;
 import ru.t1.bank.repository.RoleRepository;
 import ru.t1.bank.repository.UserRepository;
+import ru.t1.bank.service.AccountService;
+import ru.t1.bank.service.CurrencyService;
 import ru.t1.bank.service.UserService;
 
 import java.time.LocalDate;
@@ -27,6 +34,10 @@ public class BankApplication {
 	private RoleRepository roleRepository;
 	@Autowired
 	PasswordEncoder passwordEncoder;
+	@Autowired
+	private AccountService accountService;
+	@Autowired
+	private CurrencyService currencyService;
 
 
 	public static void main(String[] args) {
@@ -34,7 +45,7 @@ public class BankApplication {
 	}
 
 	@EventListener(ApplicationReadyEvent.class)
-	private void testJpaMethods() throws IncorrectDataException {
+	private void testJpaMethods() throws IncorrectDataException, NotFoundException {
 		/*Role roleUser = new Role(1L, "ROLE_CLIENT");
 		Role roleAdmin = new Role(2L, "ROLE_ADMIN");
 		roleRepository.save(roleUser);
@@ -53,6 +64,7 @@ public class BankApplication {
 		userClient.setDateOfBirth(LocalDate.of(1992, 10, 20));
 		userClient.getRoles().add(new Role(1l, "ROLE_CLIENT"));
 		userRepository.save(userClient);*/
+
 	}
 
 }

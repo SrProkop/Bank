@@ -2,7 +2,9 @@ package ru.t1.bank.controllers;
 
 import org.springframework.web.bind.annotation.*;
 import ru.t1.bank.Response;
+import ru.t1.bank.dto.CurrencyDTO;
 import ru.t1.bank.exceptions.NotFoundException;
+import ru.t1.bank.mappers.CurrencyMapper;
 import ru.t1.bank.models.Currency;
 import ru.t1.bank.service.CurrencyService;
 
@@ -13,30 +15,27 @@ import java.util.List;
 public class CurrencyController {
 
     private final CurrencyService currencyService;
+    private final CurrencyMapper currencyMapper;
 
-    public CurrencyController(CurrencyService currencyService) {
+    public CurrencyController(CurrencyService currencyService,
+                              CurrencyMapper currencyMapper) {
         this.currencyService = currencyService;
+        this.currencyMapper = currencyMapper;
     }
 
     @GetMapping
-    public List<Currency> getCurrencies() {
-        return currencyService.findAll();
+    public List<CurrencyDTO> getCurrencies() {
+        return currencyMapper.toCurrencyDTO(currencyService.findAll());
     }
 
     @GetMapping("/{id}")
-    public Currency getCurrencyById(@PathVariable long id) throws NotFoundException {
-        return currencyService.findById(id);
-    }
-
-    @PostMapping
-    public Currency createCurrency(@RequestParam String name,
-                                 @RequestParam String code) {
-        return currencyService.createCurrency(name, code);
+    public CurrencyDTO getCurrencyById(@PathVariable long id) throws NotFoundException {
+        return currencyMapper.toCurrencyDTO(currencyService.findById(id));
     }
 
     @PutMapping
-    public Currency createCurrency(@RequestBody Currency currency) {
-        return currencyService.createCurrency(currency);
+    public CurrencyDTO createCurrency(@RequestBody Currency currency) {
+        return currencyMapper.toCurrencyDTO(currencyService.createCurrency(currency));
     }
 
     @DeleteMapping("/{id}")

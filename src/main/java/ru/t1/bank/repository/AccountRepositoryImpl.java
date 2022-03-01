@@ -53,10 +53,9 @@ public class AccountRepositoryImpl implements AccountRepositoryCustom{
         final int end = Math.min((start + pageable.getPageSize()), accounts.size());
         try {
             return new PageImpl<>(accounts.subList(start, end), pageable, accounts.size());
-        } catch (Exception e) {
+        } catch (IllegalArgumentException e) {
             System.out.println(e);
             throw new NotFoundException("Page not found");
         }
-
     }
 }

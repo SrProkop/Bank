@@ -10,6 +10,8 @@ import ru.t1.bank.exceptions.InsufficientFundsException;
 import ru.t1.bank.exceptions.NotFoundException;
 import ru.t1.bank.Response;
 
+import javax.validation.ConstraintViolationException;
+
 @ControllerAdvice(annotations = RestController.class)
 public class ExceptionHandlerAdvice {
 
@@ -28,6 +30,12 @@ public class ExceptionHandlerAdvice {
     @ExceptionHandler(InsufficientFundsException.class)
     public ResponseEntity<Response> handleInsufficientFundsException(InsufficientFundsException e) {
         Response response = new Response(e.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<Response> handleConstraintViolationException(ConstraintViolationException e) {
+        Response response = new Response("Insufficient funds on the account");
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 

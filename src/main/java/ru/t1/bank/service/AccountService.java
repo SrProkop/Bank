@@ -31,7 +31,10 @@ public class AccountService {
         this.em = em;
     }
 
-    public List<Account> findAll(int numberPage, Currency currency, BigDecimal fromSum, BigDecimal upToSum) throws NotFoundException {
+    public List<Account> findAll(Integer numberPage, Currency currency, BigDecimal fromSum, BigDecimal upToSum) throws NotFoundException {
+        if (numberPage == null) {
+            numberPage = 1;
+        }
         Pageable pageable = PageRequest.of(numberPage - 1, 5, Sort.by("id").descending());
         return accountRepository.findAccountByCurrencyAndMoney(pageable, currency, fromSum, upToSum).toList();
     }
@@ -112,11 +115,15 @@ public class AccountService {
         String secondNumber = String.valueOf(date.getYear()*2 - 27);
         //Добавить количество закрытых аккаунтов
         int number = accountRepository.findAll().size();
-        System.out.println(number);
-        while (number < 1000_0000) {
-            number = number*10;
+        String thirdNumber;
+        if (number != 0) {
+            while (number < 1000_0000) {
+                number = number*10;
+            }
+            thirdNumber = String.valueOf(number);
+        } else {
+            thirdNumber = "00000000";
         }
-        String thirdNumber = String.valueOf(number);
         return firstNumber + secondNumber + thirdNumber;
     }
 

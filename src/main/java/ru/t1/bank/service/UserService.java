@@ -1,17 +1,22 @@
 package ru.t1.bank.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import ru.t1.bank.exceptions.IncorrectDataException;
 import ru.t1.bank.exceptions.NotFoundException;
+import ru.t1.bank.mappers.UserMapper;
 import ru.t1.bank.models.Role;
 import ru.t1.bank.models.User;
 import ru.t1.bank.repository.RoleRepository;
 import ru.t1.bank.repository.UserRepository;
-import ru.t1.bank.utils.DateConverter;
 
+import java.time.DateTimeException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,6 +25,7 @@ public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+
 
     public UserService(UserRepository userRepository,
                        RoleRepository roleRepository
@@ -49,11 +55,17 @@ public class UserService implements UserDetailsService {
                            String username,
                            String password) throws IncorrectDataException {
         User user = new User();
-        user.setDateOfBirth(DateConverter.converterLocalDate(date));
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+            user.setDateOfBirth(LocalDate.parse(date, formatter));
+        } catch (DateTimeParseException e) {
+            throw new IncorrectDataException("You input incorrect date. Format date - DD-MM-YYYY");
+        }
         user.setFullName(fullName);
         user.setUsername(username);
         user.setPassword(password);
         user.getRoles().add(new Role(1l, "ROLE_CLIENT"));
+        user = userRepository.save(user);
         return userRepository.save(user);
     }
 
